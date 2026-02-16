@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>PROJECT SCP</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700;900&display=swap" rel="stylesheet">
-
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <title>Пример Пример</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@500;600;700&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -18,67 +17,153 @@
 
     body, html {
       height: 100%;
-      background: #000000;
-      color: #ffffff;
-      font-family: 'Roboto', sans-serif;
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #000;
+      color: #fff;
       overflow: hidden;
+    }
+
+    /* === Переливающийся шейдерный фон === */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
     }
 
     .container {
       position: relative;
-      height: 100vh;
+      z-index: 10;
+      height: 100dvh;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      gap: 32px;
       padding: 20px;
     }
 
-    .card {
+    .orb {
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle at 30% 30%, #6ab3ff, #0055ff 40%, #001f66 80%);
+      border-radius: 50%;
+      box-shadow: 
+        0 0 60px #3b82ff,
+        0 0 120px #1e40af,
+        inset 0 0 40px #60a5fa;
+      filter: blur(2px) brightness(1.1);
+    }
+
+    .btn {
       width: 100%;
-      max-width: 360px;
-      background: #000000;
-      border: 2px solid #ffffff;
-      border-radius: 36px;          /* скругление как на скриншоте */
-      padding: 60px 20px;
+      max-width: 340px;
+      padding: 20px 0;
+      font-size: 22px;
+      font-weight: 600;
+      color: #ffffff;
       text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 32px;                    /* расстояние между строками */
+      background: rgba(20, 30, 60, 0.45);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(100, 160, 255, 0.35);
+      border-radius: 20px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255,255,255,0.08),
+        0 0 20px rgba(59, 130, 246, 0.4);
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      cursor: pointer;
+      user-select: none;
     }
 
-    .title {
-      font-size: 2.8rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      line-height: 1.1;
+    .btn:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.6),
+        inset 0 1px 1px rgba(255,255,255,0.12),
+        0 0 40px rgba(59, 130, 246, 0.7);
+      border-color: rgba(100, 160, 255, 0.6);
     }
 
-    .item {
-      font-size: 2.1rem;
-      font-weight: 700;
-      line-height: 1.2;
+    .btn:active {
+      transform: translateY(0) scale(0.98);
+      transition: all 0.12s;
     }
   </style>
 </head>
 <body>
 
+  <canvas id="bg-canvas"></canvas>
+
   <div class="container">
-    <div class="card">
-      <div class="title">PROJECT SCP</div>
-      
-      <div class="item">Дискорд</div>
-      <div class="item">Донат</div>
-      <div class="item">Правила</div>
-    </div>
+    <div class="orb"></div>
+
+    <div class="btn" onclick="window.open('https://example.com/page1', '_blank')">Пример</div>
+    <div class="btn" onclick="window.open('https://example.com/page2', '_blank')">Пример</div>
+    <div class="btn" onclick="window.open('https://example.com/page3', '_blank')">Пример</div>
+    <div class="btn" onclick="window.open('https://example.com/page4', '_blank')">Пример</div>
   </div>
 
   <script>
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
-    // tg.setHeaderColor('#000000');     // если хочешь затемнить верхнюю панель
-    // tg.setBackgroundColor('#000000');
+    // Простой переливающийся градиент-шейдер на canvas
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let time = 0;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    function animate() {
+      time += 0.003;
+
+      const w = canvas.width;
+      const h = canvas.height;
+
+      const grad = ctx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0.0,  hslToRgb( (time*10)   % 360, 0.7, 0.08) );
+      grad.addColorStop(0.25, hslToRgb( (time*12+60)% 360, 0.75, 0.10) );
+      grad.addColorStop(0.5,  hslToRgb( (time*15+120)%360, 0.8,  0.09) );
+      grad.addColorStop(0.75, hslToRgb( (time*18+180)%360, 0.72, 0.11) );
+      grad.addColorStop(1.0,  hslToRgb( (time*10+240)%360, 0.68, 0.07) );
+
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+
+      // лёгкое затемнение для глубины
+      ctx.fillStyle = 'rgba(0,0,0,0.65)';
+      ctx.fillRect(0, 0, w, h);
+
+      requestAnimationFrame(animate);
+    }
+
+    function hslToRgb(h, s, l) {
+      h = h % 360;
+      s = Math.min(1, Math.max(0, s));
+      l = Math.min(1, Math.max(0, l));
+
+      let c = (1 - Math.abs(2*l - 1)) * s;
+      let x = c * (1 - Math.abs((h/60)%2 - 1));
+      let m = l - c/2;
+
+      let r=0, g=0, b=0;
+      if      (h < 60)  { r=c; g=x; b=0; }
+      else if (h < 120) { r=x; g=c; b=0; }
+      else if (h < 180) { r=0; g=c; b=x; }
+      else if (h < 240) { r=0; g=x; b=c; }
+      else if (h < 300) { r=x; g=0; b=c; }
+      else              { r=c; g=0; b=x; }
+
+      return `rgb(${Math.round((r+m)*255)},${Math.round((g+m)*255)},${Math.round((b+m)*255)})`;
+    }
+
+    animate();
   </script>
 </body>
 </html>
