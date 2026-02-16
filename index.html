@@ -47,10 +47,8 @@
       margin-bottom: 40px;
     }
 
-    .title {
-      font-size: 48px;
-      font-weight: 900;
-      letter-spacing: -1px;
+    .title,
+    .subtitle {
       background: linear-gradient(90deg, #6ab3ff, #3b82f6, #8b5cf6, #ec4899, #6ab3ff);
       background-size: 300% 300%;
       -webkit-background-clip: text;
@@ -59,16 +57,18 @@
       animation: gradientFlow 8s ease infinite;
     }
 
+    .title {
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
     .subtitle {
       font-size: 24px;
       font-weight: 600;
       margin-top: 8px;
-      background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa);
-      background-size: 300% 300%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: gradientFlow 10s ease infinite reverse;
+      animation-duration: 10s;
+      animation-direction: reverse;
     }
 
     @keyframes gradientFlow {
@@ -88,12 +88,17 @@
       background: rgba(20, 30, 60, 0.45);
       backdrop-filter: blur(16px) saturate(180%);
       -webkit-backdrop-filter: blur(16px) saturate(180%);
-      border: 1px solid rgba(100, 160, 255, 0.35);
+      border: 2px solid transparent;               /* важно: transparent для border-image */
       border-radius: 20px;
+      border-image: linear-gradient(90deg, #6ab3ff, #3b82f6, #8b5cf6, #ec4899, #6ab3ff) 1;
+      border-image-slice: 1;
+      border-image-source: linear-gradient(90deg, #6ab3ff, #3b82f6, #8b5cf6, #ec4899, #6ab3ff);
+      border-image-slice: 1;
+      animation: gradientFlow 8s ease infinite;
       box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.5),
         inset 0 1px 1px rgba(255,255,255,0.08),
-        0 0 20px rgba(59, 130, 246, 0.4);
+        0 0 20px rgba(107, 114, 255, 0.4);
       transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
       cursor: pointer;
       user-select: none;
@@ -104,8 +109,8 @@
       box-shadow: 
         0 12px 40px rgba(0, 0, 0, 0.6),
         inset 0 1px 1px rgba(255,255,255,0.12),
-        0 0 40px rgba(59, 130, 246, 0.7);
-      border-color: rgba(100, 160, 255, 0.6);
+        0 0 50px rgba(107, 114, 255, 0.8);
+      filter: brightness(1.15);
     }
 
     .btn:active {
