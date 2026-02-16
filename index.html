@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Мини-приложение</title>
+  <title>Project SCP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@500;600;700;900&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -23,7 +23,6 @@
       overflow: hidden;
     }
 
-    /* Переливающийся шейдерный фон */
     #bg-canvas {
       position: fixed;
       inset: 0;
@@ -38,15 +37,50 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 32px;
-      padding: 20px;
+      justify-content: flex-end;
+      padding: 40px 20px 80px;
+      gap: 24px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .title {
+      font-size: 48px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #6ab3ff, #3b82f6, #8b5cf6, #ec4899, #6ab3ff);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientFlow 8s ease infinite;
+    }
+
+    .subtitle {
+      font-size: 24px;
+      font-weight: 600;
+      margin-top: 8px;
+      background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientFlow 10s ease infinite reverse;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .btn {
       width: 100%;
       max-width: 340px;
-      padding: 20px 0;
+      padding: 18px 0;
       font-size: 22px;
       font-weight: 600;
       color: #ffffff;
@@ -85,17 +119,19 @@
   <canvas id="bg-canvas"></canvas>
 
   <div class="container">
+    <div class="header">
+      <div class="title">Project SCP</div>
+      <div class="subtitle">люблю вас</div>
+    </div>
+
     <div class="btn" onclick="window.open('https://discord.gg/твой_инвайт', '_blank')">Дискорд</div>
     <div class="btn" onclick="window.open('https://boosty.to/твой_донат_или_donationalerts', '_blank')">Донат</div>
     <div class="btn" onclick="window.open('https://твой_сайт/правила', '_blank')">Правила</div>
-    <div class="btn" onclick="window.open('https://example.com', '_blank')">Пример</div>
   </div>
 
   <script>
-    // Простой переливающийся градиент-шейдер на canvas
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
-
     let time = 0;
 
     function resize() {
@@ -108,7 +144,6 @@
 
     function animate() {
       time += 0.003;
-
       const w = canvas.width;
       const h = canvas.height;
 
@@ -122,7 +157,6 @@
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
 
-      // лёгкое затемнение для глубины
       ctx.fillStyle = 'rgba(0,0,0,0.65)';
       ctx.fillRect(0, 0, w, h);
 
@@ -133,11 +167,9 @@
       h = h % 360;
       s = Math.min(1, Math.max(0, s));
       l = Math.min(1, Math.max(0, l));
-
       let c = (1 - Math.abs(2*l - 1)) * s;
       let x = c * (1 - Math.abs((h/60)%2 - 1));
       let m = l - c/2;
-
       let r=0, g=0, b=0;
       if      (h < 60)  { r=c; g=x; b=0; }
       else if (h < 120) { r=x; g=c; b=0; }
@@ -145,7 +177,6 @@
       else if (h < 240) { r=0; g=x; b=c; }
       else if (h < 300) { r=x; g=0; b=c; }
       else              { r=c; g=0; b=x; }
-
       return `rgb(${Math.round((r+m)*255)},${Math.round((g+m)*255)},${Math.round((b+m)*255)})`;
     }
 
