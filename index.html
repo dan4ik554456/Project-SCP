@@ -2,32 +2,115 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Моё Mini App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>project scp</title>
+
+  <!-- Шрифты: жирные, строгие, без декоративности -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700;900&family=VT323&display=swap" rel="stylesheet">
+
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
   <style>
-    body { font-family: sans-serif; background: #000; color: #fff; padding: 20px; text-align: center; }
-    button { padding: 16px 32px; font-size: 18px; margin: 10px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      background: #000;
+      color: #ffffff;
+      font-family: 'Roboto Condensed', sans-serif;
+      font-weight: 900;
+      overflow: hidden;
+    }
+
+    /* Очень мягкий, почти незаметный перелив (без яркости) */
+    #bg {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(135deg, #0a0a0a, #111111, #1a1a1a, #0f0f0f);
+      background-size: 300% 300%;
+      animation: subtleShift 40s ease infinite;
+      opacity: 0.95;
+    }
+
+    @keyframes subtleShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 30px;
+      gap: 50px;
+    }
+
+    h1 {
+      font-family: 'VT323', monospace; /* моноширинный, "терминальный" SCP-стиль */
+      font-size: clamp(3.5rem, 18vw, 8rem);
+      font-weight: 900;
+      letter-spacing: -3px;
+      line-height: 0.9;
+      text-transform: uppercase;
+      color: #ffffff;
+      /* Только жирность и чёрная обводка — без свечения */
+      -webkit-text-stroke: 1.5px #000;
+      text-stroke: 1.5px #000;
+    }
+
+    .greeting {
+      font-size: clamp(1.8rem, 8vw, 3.2rem);
+      font-weight: 900;
+      color: #e0e0e0;
+      letter-spacing: 1px;
+      -webkit-text-stroke: 0.8px #000;
+      text-stroke: 0.8px #000;
+    }
+
+    .info {
+      font-size: clamp(1.3rem, 5vw, 2rem);
+      font-weight: 700;
+      color: #cccccc;
+      max-width: 90%;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
-  <h1>Привет из Mini App!</h1>
-  <p id="user"></p>
 
-  <button onclick="sendData()">Отправить данные боту</button>
+  <div id="bg"></div>
+
+  <div class="container">
+    <h1>PROJECT SCP</h1>
+
+    <div class="greeting" id="greeting">Привет, <span id="userName">...</span></div>
+
+    <div class="info">
+      Это тестовое приложение.<br>
+      Все данные защищены протоколом [REDACTED].
+    </div>
+  </div>
 
   <script>
     const tg = window.Telegram.WebApp;
     tg.ready();
-    tg.expand(); // на весь экран
+    tg.expand();
 
-    document.getElementById("user").innerText =
-      `Привет, ${tg.initDataUnsafe.user?.first_name || "гость"}!`;
-
-    function sendData() {
-      tg.sendData("Привет из мини-аппа! Ты нажал кнопку 😎");
-      // или tg.close(); чтобы закрыть приложение
-    }
+    // Получаем имя пользователя
+    const user = tg.initDataUnsafe?.user;
+    const userName = user ? (user.first_name || user.username || 'оператор') : 'оператор';
+    document.getElementById('userName').textContent = userName;
   </script>
 </body>
 </html>
